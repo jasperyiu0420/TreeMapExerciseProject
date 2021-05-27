@@ -1,19 +1,21 @@
-import { Card, Col, Row, notification } from 'antd';
+import { Card, Col, Row, notification, Input, InputNumber } from 'antd';
 import React from 'react';
 import TreeMapInput from '../Component/TreeMapInput'
 import TreeMapRawInput from '../Component/TreeMapRawInput'
-
+import TreeMap from '../Component/TreeMap'
+import { defaultDataSource } from '../Data/TreeMapInitDataSource'
 
 export interface InputType {
     name: string,
-    weight: string,
-    value: string
+    weight: number,
+    value: number
 }
 
 
 export interface TreeMapScreenState {
     rawData: string,
     dataSource: InputType[]
+    row: number
 }
 
 export default class TreeMapScreen extends React.Component<{}, TreeMapScreenState> {
@@ -21,8 +23,9 @@ export default class TreeMapScreen extends React.Component<{}, TreeMapScreenStat
     constructor(props: {}) {
         super(props);
         this.state = {
-            rawData: "",
-            dataSource: []
+            rawData: JSON.stringify(defaultDataSource),
+            dataSource: defaultDataSource,
+            row: 3
         }
     }
     handleAddData = (value: InputType) => {
@@ -31,8 +34,7 @@ export default class TreeMapScreen extends React.Component<{}, TreeMapScreenStat
             notification.error({ message: "Create Data Failed", description: errorList.join(".") })
             return;
         }
-        this.state.dataSource.push(value)
-        this.setState({ rawData: JSON.stringify(this.state.dataSource) })
+        this.setState({ rawData: JSON.stringify(this.state.dataSource), dataSource: [...this.state.dataSource, { name: value.name, weight: Number(value.weight), value: Number(value.value) }] })
         notification.success({ message: "Create Data Success" })
 
 
@@ -78,6 +80,7 @@ export default class TreeMapScreen extends React.Component<{}, TreeMapScreenStat
         this.setState({ rawData: e.target.value })
     }
 
+
     render() {
         return (
             <Row>
@@ -90,7 +93,9 @@ export default class TreeMapScreen extends React.Component<{}, TreeMapScreenStat
                     </Card>
                 </Col>
                 <Col span={16}>
-                    <p>{JSON.stringify(this.state.dataSource)}</p>
+                    <Card extra={<InputNumber value={this.state.row} onChange={(value: number) => this.setState({ row: value })} min={1} max={this.state.dataSource.length} />}>
+                        <TreeMap dataSource={this.state.dataSource} column={this.state.row} />
+                    </Card>
                 </Col>
             </Row>
 

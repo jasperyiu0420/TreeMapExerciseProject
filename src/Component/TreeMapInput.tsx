@@ -13,18 +13,21 @@ export default class TreeMapInput extends React.Component<ITreeMapInputProps> {
                 <Form.Item
                     label="name"
                     name="name"
+                    rules={[{ required: true}]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="weight"
                     name="weight"
+                    rules={[{ required: true}]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="value"
                     name="value"
+                    rules={[{ required: true}]}
                 >
                     <Input />
                 </Form.Item>
